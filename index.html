@@ -12,42 +12,53 @@
 </head>
 
 <body>
-    <div id="start_container" class="view_containers" hidden> <!-- Kontener całej strony pierwszej -->
-        <header id="start_header_container"> <!-- Kontener tytułu -->
-            <h1 id="start_header_title"> Quiz Programistyczny </h1> <!-- Tytuł -->
+    <div id="start-container" class="view-containers"> <!-- Kontener całej strony pierwszej -->
+        <header id="start-header-container"> <!-- Kontener tytułu -->
+            <h1 id="start-header-title"> Quiz Programistyczny </h1> <!-- Tytuł -->
         </header>
 
-        <main id="start_main_container"> <!-- Kontener przycisku start -->
-            <button id="start_button" >Start</button> <!-- Przycisk start -->
+        <main id="start-main-container"> <!-- Kontener przycisku start -->
+            <button id="start-button" >Start</button> <!-- Przycisk start -->
         </main>
     </div>
 
-    <div id="quiz_container" class="view_containers"> <!-- Kontener całego quizu -->
-        <header id="quiz_header_container">  <!-- Kontener pytania -->
-            <h1 id="quiz_header_title"> </h1> <!-- Tekst pytania -->
+    <div id="quiz-container" class="view-containers" hidden> <!-- Kontener całego quizu -->
+        <header id="quiz-header-container">  <!-- Kontener pytania -->
+            <h1 id="quiz-header-title"> </h1> <!-- Tekst pytania -->
         </header>
 
-        <main id="quiz_main_container"> <!-- Kontener odpowiedzi -->
-            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
-            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
-            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
-            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
+        <main id="quiz-main-container"> <!-- Kontener odpowiedzi -->
+            <button class="answer-buttons"> </button> <!-- Przycisk odpowiedzi -->
+            <button class="answer-buttons"> </button> <!-- Przycisk odpowiedzi -->
+            <button class="answer-buttons"> </button> <!-- Przycisk odpowiedzi -->
+            <button class="answer-buttons"> </button> <!-- Przycisk odpowiedzi -->
         </main>
 
-        <aside id="quiz_aside_container"> <!-- Kontener podsumowania -->
-            <button id="quiz_aside_button" class="btn"> Podsumowanie </button> <!-- przycisk podsumowania -->
+        <aside id="quiz-aside-container"> <!-- Kontener podsumowania -->
+            <button id="quiz-aside-button" class="btn"> Podsumowanie </button> <!-- przycisk podsumowania -->
         </aside>
     </div>
 
-    <div id="end_container" class="view_containers" hidden> <!-- Kontener całego podsumowanie -->
-        <header id="end_header_container"> <!-- Kontener tytuły -->
-            <h1 id="end_header_title"></h1> <!-- Tytuł -->
+    <div id="end-container" class="view-containers" hidden> <!-- Kontener całego podsumowanie -->
+        <header id="end-header-container"> <!-- Kontener tytuły -->
+            <h1 id="end-header-title"> Podsumowanie quizu programistycznego</h1> <!-- Tytuł -->
         </header>
 
-        <main id="end_main_container"> <!-- Kontener podsumowania -->
-            <ul id="end_main_question_list"> <!-- Lista podsumowania -->
+        <main id="end-main-container"> <!-- Kontener podsumowania -->
+            <ul id="end-main-question-list"> <!-- Lista podsumowania -->
             </ul>
+            <div id="end-total-time-container" aria-label="Łączny czas odpowiedzi">
+                <span>Łączny czas:</span>
+                <output id="end-total-time">000</output>
+                <span>s</span>
+            </div>
         </main>
+
+        <aside id="end-aside-container">
+            <button id="end-aside-button" class="btn" type="button">Wróć do startu</button>
+        </aside>
     </div>
-<script src="script.js" defer></script> <!-- Link do skryptu javascript (atrybut defer czeka na załadowania całej struktury DOM) -->
+<script src="questions.js"></script>
+<script src="script.js"></script>
 </body>
+</html>
