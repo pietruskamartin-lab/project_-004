@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Martin Pietruska">
+    <title>Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"> <!-- Pobiera Noto Sans z oficjalnej strony googla -->
+    <link rel="stylesheet" href="style.css"> <!--Link do arkusza kaskadowego-->
+</head>
+
+<body>
+    <div id="start_container" class="view_containers" hidden> <!-- Kontener całej strony pierwszej -->
+        <header id="start_header_container"> <!-- Kontener tytułu -->
+            <h1 id="start_header_title"> Quiz Programistyczny </h1> <!-- Tytuł -->
+        </header>
+
+        <main id="start_main_container"> <!-- Kontener przycisku start -->
+            <button id="start_button" >Start</button> <!-- Przycisk start -->
+        </main>
+    </div>
+
+    <div id="quiz_container" class="view_containers"> <!-- Kontener całego quizu -->
+        <header id="quiz_header_container">  <!-- Kontener pytania -->
+            <h1 id="quiz_header_title"> </h1> <!-- Tekst pytania -->
+        </header>
+
+        <main id="quiz_main_container"> <!-- Kontener odpowiedzi -->
+            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
+            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
+            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
+            <button class="answer_buttons"> </button> <!-- Przycisk odpowiedzi -->
+        </main>
+
+        <aside id="quiz_aside_container"> <!-- Kontener podsumowania -->
+            <button id="quiz_aside_button" class="btn"> Podsumowanie </button> <!-- przycisk podsumowania -->
+        </aside>
+    </div>
+
+    <div id="end_container" class="view_containers" hidden> <!-- Kontener całego podsumowanie -->
+        <header id="end_header_container"> <!-- Kontener tytuły -->
+            <h1 id="end_header_title"></h1> <!-- Tytuł -->
+        </header>
+
+        <main id="end_main_container"> <!-- Kontener podsumowania -->
+            <ul id="end_main_question_list"> <!-- Lista podsumowania -->
+            </ul>
+        </main>
+    </div>
+<script src="script.js" defer></script> <!-- Link do skryptu javascript (atrybut defer czeka na załadowania całej struktury DOM) -->
+</body>
