@@ -9,15 +9,18 @@ const startButton = document.getElementById("start-button");
 const summaryButton = document.getElementById("quiz-aside-button");
 const returnToStartButton = document.getElementById("end-aside-button");
 const questionTitle = document.getElementById("quiz-header-title");
-const answerButtons = document.querySelectorAll(".answer-buttons");
+const answersContainer = document.getElementById("quiz-main-container");
 const questionList = document.getElementById("end-main-question-list");
 const totalTimeOutput = document.getElementById("end-total-time");
-const endHeaderTitle = document.getElementById("end-header-title");
+const endHeaderScore = document.getElementById("end-header-score");
 
 let quizQuestions = [];
-let currentQuestionIndex = 0;
 let userAnswers = [];
 let quizStartedAt = 0;
+let currentQuestionIndex = 0;
+let currentQuestion = null;
+let currentAnswerSaved = false;
+let advanceTimer = null;
 
 function changeView(viewToShow) {
     views.forEach((view) => {
@@ -25,112 +28,115 @@ function changeView(viewToShow) {
     });
 }
 
-function shuffleQuestions(questionList) {
-    const shuffledQuestions = [...questionList];
+function startQuiz() {
+    quizQuestions = [...questions];
 
-    for (let index = shuffledQuestions.length - 1; index > 0; index -= 1) {
+    // Miesza pytania, aby w każdej rozgrywce pojawiały się w innej kolejności.
+    for (let index = quizQuestions.length - 1; index > 0; index--) {
         const randomIndex = Math.floor(Math.random() * (index + 1));
-        [shuffledQuestions[index], shuffledQuestions[randomIndex]] = [
-            shuffledQuestions[randomIndex],
-            shuffledQuestions[index]
-        ];
+        [quizQuestions[index], quizQuestions[randomIndex]] = [quizQuestions[randomIndex], quizQuestions[index]];
     }
 
-    return shuffledQuestions;
-}
+    userAnswers = [];
+    currentQuestionIndex = 0;
+    quizStartedAt = Date.now();
+    summaryButton.disabled = true;
 
-function startQuiz() {
-    if (questions.length === 0) {
-        questionTitle.textContent = "Brak pytań do wyświetlenia.";
-        changeView(quizView);
+    if (quizQuestions.length === 0) {
+        questionTitle.textContent = "Brak pytań w quizie.";
+        answersContainer.replaceChildren();
         return;
     }
 
-    quizQuestions = shuffleQuestions(questions);
-    currentQuestionIndex = 0;
-    userAnswers = Array(quizQuestions.length).fill(null);
-    quizStartedAt = Date.now();
-    questionList.replaceChildren();
-    totalTimeOutput.textContent = "000";
-    endHeaderTitle.textContent = "Podsumowanie quizu programistycznego";
-
-    renderQuestion();
-    changeView(quizView);
+    loadQuestion();
 }
 
-function renderQuestion() {
-    const currentQuestion = quizQuestions[currentQuestionIndex];
+function loadQuestion() {
+    currentQuestion = quizQuestions[currentQuestionIndex];
+    currentAnswerSaved = false;
 
     questionTitle.textContent = currentQuestion.question;
+    answersContainer.replaceChildren();
 
-    answerButtons.forEach((button, answerIndex) => {
-        const answerExists = answerIndex < currentQuestion.answers.length;
-        button.hidden = !answerExists;
+    currentQuestion.answers.forEach((answer, answerIndex) => {
+        const answerOption = document.createElement("div");
+        answerOption.className = "answer-option";
 
-        if (answerExists) {
-            button.textContent = currentQuestion.answers[answerIndex];
-        }
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "answer";
+        radio.value = answerIndex;
+        radio.addEventListener("change", () => saveAnswer(answerIndex));
+
+        const answerText = document.createElement("span");
+        answerText.className = "answer-container";
+        answerText.textContent = answer;
+
+        answerOption.append(radio, answerText);
+        answersContainer.append(answerOption);
     });
 }
 
-function handleAnswer(answerIndex) {
-    if (currentQuestionIndex >= quizQuestions.length) {
-        return;
-    }
+function saveAnswer(selectedAnswerIndex) {
+    if (currentAnswerSaved) return;
 
-    userAnswers[currentQuestionIndex] = answerIndex;
-    currentQuestionIndex += 1;
+    currentAnswerSaved = true;
+    summaryButton.disabled = false;
+    userAnswers.push({
+        question: currentQuestion.question,
+        answers: currentQuestion.answers,
+        selectedAnswerIndex,
+        correctAnswer: currentQuestion.correctAnswer,
+        isCorrect: selectedAnswerIndex === currentQuestion.correctAnswer
+    });
 
-    if (currentQuestionIndex < quizQuestions.length) {
-        renderQuestion();
+    if (currentQuestionIndex < quizQuestions.length - 1) {
+        advanceTimer = window.setTimeout(() => {
+            advanceTimer = null;
+            currentQuestionIndex++;
+            loadQuestion();
+        }, 350);
     } else {
-        finishQuiz();
+        advanceTimer = window.setTimeout(showSummary, 350);
     }
 }
 
-function renderSummary() {
+function showSummary() {
+    if (advanceTimer !== null) {
+        window.clearTimeout(advanceTimer);
+        advanceTimer = null;
+    }
+
     questionList.replaceChildren();
 
-    let correctAnswersCount = 0;
+    const correctAnswersCount = userAnswers.filter((answerRecord) => answerRecord.isCorrect).length;
+    endHeaderScore.textContent = `Wynik: ${correctAnswersCount} / ${quizQuestions.length}`;
 
-    quizQuestions.forEach((question, index) => {
-        const selectedAnswerIndex = userAnswers[index];
-        const isCorrect = selectedAnswerIndex === question.correctAnswer;
+    userAnswers.forEach((answerRecord) => {
         const listItem = document.createElement("li");
+        const chosenAnswer = answerRecord.answers[answerRecord.selectedAnswerIndex];
+        const correctAnswer = answerRecord.answers[answerRecord.correctAnswer];
 
-        if (isCorrect) {
-            correctAnswersCount += 1;
-        }
-
-        listItem.classList.add(isCorrect ? "is-correct" : "is-incorrect");
-
-        const selectedAnswer = selectedAnswerIndex === null
-            ? "Brak odpowiedzi"
-            : question.answers[selectedAnswerIndex];
-        const result = isCorrect ? "Poprawnie" : "Niepoprawnie";
-        const correctAnswerText = isCorrect
-            ? ""
-            : ` Poprawna odpowiedź: ${question.answers[question.correctAnswer]}.`;
-
-        listItem.textContent = `${question.question} Twoja odpowiedź: ${selectedAnswer}. ${result}.${correctAnswerText}`;
+        listItem.classList.add(answerRecord.isCorrect ? "is-correct" : "is-incorrect");
+        listItem.textContent = `${answerRecord.question} Twoja odpowiedź: ${chosenAnswer}. Poprawna odpowiedź: ${correctAnswer}.`;
         questionList.append(listItem);
     });
 
-    endHeaderTitle.textContent = `Wynik: ${correctAnswersCount} / ${quizQuestions.length}`;
-}
-
-function finishQuiz() {
-    const elapsedSeconds = Math.floor((Date.now() - quizStartedAt) / 1000);
-
+    const elapsedSeconds = quizStartedAt
+        ? Math.floor((Date.now() - quizStartedAt) / 1000)
+        : 0;
     totalTimeOutput.textContent = String(elapsedSeconds).padStart(3, "0");
-    renderSummary();
+
     changeView(endView);
 }
 
-answerButtons.forEach((button, answerIndex) => {
-    button.addEventListener("click", () => handleAnswer(answerIndex));
+startButton.addEventListener("click", () => {
+    startQuiz();
+    changeView(quizView);
 });
 
-startButton.addEventListener("click", startQuiz);
-summaryButton.addEventListener("click", finishQuiz);
-returnToStartButton.addEventListener("click", () => changeView(startView));
+summaryButton.addEventListener("click", showSummary);
+
+returnToStartButton.addEventListener("click", () => {
+    changeView(startView);
+});
