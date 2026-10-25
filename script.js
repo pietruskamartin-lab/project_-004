@@ -110,7 +110,7 @@ function showSummary() {
     questionList.replaceChildren();
 
     const correctAnswersCount = userAnswers.filter((answerRecord) => answerRecord.isCorrect).length;
-    endHeaderScore.textContent = `Wynik: ${correctAnswersCount} / ${quizQuestions.length}`;
+    endHeaderScore.textContent = `Wynik: ${correctAnswersCount} / ${userAnswers.length}`;
 
     userAnswers.forEach((answerRecord) => {
         const listItem = document.createElement("li");

@@ -408,7 +408,6 @@ body {
     background-color: var(--tertiary);
     border: 2px solid var(--accent);
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-card);
     font-size: var(--font-size-title);
     font-weight: var(--font-weight-bold);
     text-align: center;
@@ -459,6 +458,8 @@ body {
 #end-main-question-list li {
     flex: 0 0 auto;
     padding: var(--spacing-md);
+
+    text-align: center;
 
     overflow-wrap: anywhere;
     background-color: var(--tertiary);
