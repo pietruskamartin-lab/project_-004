@@ -24,15 +24,14 @@
 
     <div id="quiz-container" class="view-containers" hidden> <!-- Kontener całego quizu -->
         <header id="quiz-header-container">  <!-- Kontener pytania -->
-            <h1 id="quiz-header-title"> </h1> <!-- Tekst pytania -->
+            <h1 id="quiz-header-title"></h1> <!-- Tekst pytania -->
         </header>
 
         <main id="quiz-main-container"> <!-- Kontener odpowiedzi -->
+            <div id="quiz-answers-container"></div>
+            <img id="quiz-question-image" alt="" hidden>
         </main>
 
-        <aside id="quiz-aside-container"> <!-- Kontener podsumowania -->
-            <button id="quiz-aside-button" class="btn"> Podsumowanie </button> <!-- przycisk podsumowania -->
-        </aside>
     </div>
 
     <div id="end-container" class="view-containers" hidden> <!-- Kontener całego podsumowanie -->
@@ -52,7 +51,7 @@
         </main>
 
         <aside id="end-aside-container">
-            <button id="end-aside-button" class="btn" type="button">Wróć do startu</button>
+            <button id="end-button" class="btn" type="button">Wróć do startu</button>
         </aside>
     </div>
 <script src="questions.js"></script>
