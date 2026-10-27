@@ -14,9 +14,9 @@ const questionList = document.getElementById("end-main-question-list");
 const endHeaderScore = document.getElementById("end-header-score");
 const totalTimeOutput = document.getElementById("end-total-time");
 
-let quizQuestions = [];
+let remainingQuestions = [];
 let userAnswers = [];
-let currentQuestionIndex = 0;
+let currentQuestion = null;
 let quizStartedAt = 0;
 let advanceTimer = null;
 
@@ -53,13 +53,13 @@ function startQuiz() {
         advanceTimer = null;
     }
 
-    quizQuestions = (window.questions ?? []).map(shuffleQuestionAnswers);
+    remainingQuestions = (window.questions ?? []).map(shuffleQuestionAnswers);
     userAnswers = [];
-    currentQuestionIndex = 0;
+    currentQuestion = null;
     quizStartedAt = Date.now();
     questionList.replaceChildren();
 
-    if (quizQuestions.length === 0) {
+    if (remainingQuestions.length === 0) {
         questionTitle.textContent = "Brak pytań w quizie.";
         answersContainer.replaceChildren();
         quizMainContainer.classList.remove("has-image");
@@ -72,10 +72,33 @@ function startQuiz() {
     showView(quizView);
 }
 
+function dynamicQuestionSize(questionText) {
+    const textLength = questionText.length;
+
+    if (textLength > 300) {
+        questionTitle.style.fontSize = "100%";
+    } else if (textLength > 240) {
+        questionTitle.style.fontSize = "112.5%";
+    } else if (textLength > 180) {
+        questionTitle.style.fontSize = "125%";
+    } else if (textLength > 120) {
+        questionTitle.style.fontSize = "150%";
+    } else if (textLength > 80) {
+        questionTitle.style.fontSize = "175%";
+    } else {
+        questionTitle.style.fontSize = "";
+    }
+}
+
 function showQuestion() {
-    const question = quizQuestions[currentQuestionIndex];
+    const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
+    currentQuestion = remainingQuestions.splice(randomIndex, 1)[0];
+    const question = currentQuestion;
     questionTitle.textContent = question.question;
+    dynamicQuestionSize(question.question);
     answersContainer.replaceChildren();
+
+
 
     const imageSource = question.image || question.img;
     quizMainContainer.classList.toggle("has-image", Boolean(imageSource));
@@ -113,7 +136,7 @@ function showQuestion() {
 }
 
 function saveAnswer(selectedAnswerIndex) {
-    const question = quizQuestions[currentQuestionIndex];
+    const question = currentQuestion;
 
     userAnswers.push({
         question: question.question,
@@ -129,12 +152,10 @@ function saveAnswer(selectedAnswerIndex) {
 
     advanceTimer = window.setTimeout(() => {
         advanceTimer = null;
-        currentQuestionIndex++;
-
-        if (currentQuestionIndex < quizQuestions.length) {
-            showQuestion();
-        } else {
+        if (userAnswers.length >= 20 || remainingQuestions.length === 0) {
             showSummary();
+        } else {
+            showQuestion();
         }
     }, 350);
 }

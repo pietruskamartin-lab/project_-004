@@ -255,7 +255,8 @@ body {
     gap: var(--spacing-sm);
 
     width: auto;
-    height: 20%;
+    height: auto;
+    min-height: 20%;
     padding: var(--spacing-md);
 
     flex-shrink: 0;
